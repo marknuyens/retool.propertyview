@@ -153,24 +153,19 @@ window.matchColumnValue = function(data, key, input = '') {
 // Filter columnar data by matching a search input against one or more keys (columns)
 window.matchColumn = function(data, keys, input = '') {
   if (!data || !keys) return data;
-
   // ensure valid array
   const keyArray = Array.isArray(keys) ? keys : [keys];
-
   // in case of invalid columns, return original
   const validKeys = keyArray.filter(key => data[key]);
   if (validKeys.length === 0) return data;
-
   const rowCount = data[validKeys[0]].length;
   const matches = [];
-
   for (let i = 0; i < rowCount; i++) {
     const match = validKeys.some(key =>
       String(data[key]?.[i] ?? '').toLowerCase().includes(input.toLowerCase())
     );
     if (!input || match) matches.push(i);
   }
-
   const result = {};
   for (const col in data) {
     result[col] = matches.map(i => data[col][i]);
