@@ -153,20 +153,20 @@ window.matchColumnValue = function(data, key, input = '') {
 // Filter columnar data by matching a search input against one or more keys (columns)
 window.matchColumn = function(data, keys, input = '') {
   if (!data || !keys) return data;
+
   // ensure valid array
   const keyArray = Array.isArray(keys) ? keys : [keys];
+
   // in case of invalid columns, return original
   const validKeys = keyArray.filter(key => data[key]);
   if (validKeys.length === 0) return data;
-  // set the row count for loop
+
   const rowCount = data[validKeys[0]].length;
-  // define empty result list
   const matches = [];
-  // loop through all keys
+
   for (let i = 0; i < rowCount; i++) {
-    // check if any match the provided input or are empty
     const match = validKeys.some(key =>
-      data[key]?.[i]?.toLowerCase().includes(input.toLowerCase())
+      String(data[key]?.[i] ?? '').toLowerCase().includes(input.toLowerCase())
     );
     if (!input || match) matches.push(i);
   }
@@ -178,7 +178,6 @@ window.matchColumn = function(data, keys, input = '') {
 
   return result;
 };
-
 
 // translation function
 // usage: __("nederlands | english", {{ current_user }})
