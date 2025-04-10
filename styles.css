@@ -1,0 +1,105 @@
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[data-guided-tour-id="viewerPageLayoutScrollContainer"] > div {
+  padding: 0!important;
+}
+
+[class*="_innerContainer_"] {
+  overflow: hidden!important;
+}
+
+[class*="_retool-TableWidget"] {
+  [class*="_fullscreen"] {
+   height: calc(100vh - 200px);
+  }
+}
+
+[class*="LookupForm"],
+[class*="PrimaryFilterFields"],
+[class*="SecondaryFilterFields"] {
+  [class*="_attachmentAfter_"] {
+   visibility: hidden;
+    width: 10px;
+  }
+}
+
+[class*="_scroll-container"] {
+  padding-bottom: 0!important;
+  height: calc(100vh - 140px);
+}
+
+[data-column-id*="naam"],
+[data-column-id*="Naam"],
+[data-column-id*="omschrijving"],
+[data-column-id*="Omschrijving"]{
+  width: 300px!important;
+}
+
+._retool-Logo {
+  width: auto;
+}
+
+._retool-Notes {
+  background: #F2F4F8;
+  border: 1px solid #e0e0e0;
+  padding-left: 0.5rem!important;
+  padding-top: 0.5rem!important;
+  margin-top: -1px;
+}
+
+div[class^="_labelContainer_"] {
+  div[class^="_caption_"], div[class^="_label_"] {
+     display: inline-block;   
+  }
+  div[class^="_caption_"] {
+    /* margin-left: 10px; */
+  }
+  div[class^="_list_"] > div > div {
+    height: 40px!important;
+  }
+}
+
+._retool-GlobalWidget > .retool-widget:has(._retool-ListboxWidget > .retool-widget:not(:empty)) {
+  z-index: 999999!important;
+}
+
+[data-role="listbox"] {
+  box-shadow: 0px 5px 10px rgba(0,0,0,0.1);
+}
+
+div[class*="_toastStack_"] {
+  zoom: 1.5;
+}
+
+div[class*="autocomplete"] {
+  div[class^="_content_"] {
+    min-width: 25%;
+  }
+  div[class^="_textAfter_"] {
+    width: 100%;
+    
+    div[class^="_textInner_"] {
+      width: 100%;
+      text-align: left;
+    }
+  }
+}
+
+div[class^="LookupFormField"] {
+  div[class^="_content_"] {
+    min-width: 120px!important;
+  }
+}
+
+div[class^="_modalWrapper"] {
+  justify-content: center;
+  align-items: start;
+  margin-top: 50px;
+}
+
+/* div[class*="_retool-TableWidget"] {
+  height: calc(100% - 20px)!important;
+} */
