@@ -1,5 +1,5 @@
 // get the authorization rules of a certain dossier
-window.getActions = function(dossier = '') {
+window.getActions = function (dossier = '') {
   return {
     opg: ["*"],
     eig: ["*"],
@@ -18,7 +18,7 @@ window.getActions = function(dossier = '') {
 }
 
 // get a global setting from a defined list of key-value sets
-window.getSetting = function(key = '', fallback = null) {
+window.getSetting = function (key = '', fallback = null) {
   return _.get({
     uuidForProvimApplication: 'd403452e-75a3-11ef-b2ae-ef0479d32144',
     defaultFilterFieldWidth: 150,
@@ -30,7 +30,7 @@ window.getSetting = function(key = '', fallback = null) {
 }
 
 // get the icon for the current dossier
-window.getIcon = function(sys_short = '', weight = 'bold') {
+window.getIcon = function (sys_short = '', weight = 'bold') {
   const key = sys_short.toLowerCase();
   return {
     opg: `/icon:${weight}/interface-user-multiple`,
@@ -54,11 +54,11 @@ window.getIcon = function(sys_short = '', weight = 'bold') {
 }
 
 // determine what formatting should be used
-window.getFormat = function(column = '', ignore = []) {
+window.getFormat = function (column = '', ignore = []) {
   const html_regex = /-(code|id)$/i;
-  if(html_regex.test(column) && !ignore.includes(column)) {
+  if (html_regex.test(column) && !ignore.includes(column)) {
     return 'html';
-  } else if(column == 'Eigenaar') {
+  } else if (column == 'Eigenaar') {
     return 'html';
   } else {
     return 'string';
@@ -66,19 +66,19 @@ window.getFormat = function(column = '', ignore = []) {
 }
 
 // transform the provided data to support links, etc.
-window.transformData = function(data, ignore = []) {
+window.transformData = function (data, ignore = []) {
   _.forEach(data, (values, column) => {
     var format = window.getFormat(column, ignore);
     // TODO: in the case of a callback, use custom function
     // callback(column, ...) ?
-    if(format == 'html') {
-        // TODO: determine correct page by column
-        var page = 'eigenaar';
-        var col = '_eig_code';
-        var key = 'eig';
-        var val = null;
+    if (format == 'html') {
+      // TODO: determine correct page by column
+      var page = 'eigenaar';
+      var col = '_eig_code';
+      var key = 'eig';
+      var val = null;
       _.forEach(data[column], (value, index) => {
-        if(column === 'Eigenaar') {
+        if (column === 'Eigenaar') {
           val = data[col][index];
           data[column][index] = `<a href="#details=${key}&action=update&id=${val}&title=${value}">${value}</a>`;
         }
@@ -90,16 +90,16 @@ window.transformData = function(data, ignore = []) {
         var value = data[column][key];
         if (val === 'true' || val === 'false') {
           value = val === 'true' ? 'Ja' : 'Nee';
-        } else if(val === '9998-12-31') {
+        } else if (val === '9998-12-31') {
           value = 'Nooit';
-        } else if(_.size(val) === 10 && moment(val, true).isValid()) {
+        } else if (_.size(val) === 10 && moment(val, true).isValid()) {
           value = moment(val).format('DD-MM-yyyy');
-        } else if(_.isBoolean(val)) {
+        } else if (_.isBoolean(val)) {
           value = val ? 'Ja' : 'Nee';
-        } else if(/bedrag|prijs|raming|gefactureerd|nog verwacht/i.test(column)) {
+        } else if (/bedrag|prijs|raming|gefactureerd|nog verwacht/i.test(column)) {
           value = '€ ' + _.toNumber(val).toLocaleString('nl-NL', {
-            minimumFractionDigits: 2, 
-            maximumFractionDigits: 2 
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
           });
         }
         data[column][key] = value;
@@ -113,10 +113,10 @@ window.transformData = function(data, ignore = []) {
 window.transformResults = window.transformData;
 
 // check if the autocomplete data matches certain keywords
-window.filterByKeywords = function({ label, value }, keywords = '') {
+window.filterByKeywords = function ({ label, value }, keywords = '') {
   var output = {};
   _.forEach(label, (val, index) => {
-    if(keywords == value[index] || _.toLower(val).includes(_.toLower(keywords)) || keywords == ''){
+    if (keywords == value[index] || _.toLower(val).includes(_.toLower(keywords)) || keywords == '') {
       output[index] = {
         value: value[index],
         label: val
@@ -127,7 +127,7 @@ window.filterByKeywords = function({ label, value }, keywords = '') {
 }
 
 // transform the data to only get single result
-window.getFirstResult = function(data) {
+window.getFirstResult = function (data) {
   var newData = {};
   // get the first value from the value array set
   _.forEach(data, (value, field) => {
@@ -137,12 +137,12 @@ window.getFirstResult = function(data) {
 }
 
 // convert a query dataset into an assosiative array
-window.toValueLabelSet = function(data, value = 'value', label = 'label', check = '') {
+window.toValueLabelSet = function (data, value = 'value', label = 'label', check = '') {
   return _.zipWith(data[value], data[label], data[check], (value, label, check) => ({ value, label, check }));
 }
 
 // filter "columnar" data list by input value
-window.matchColumnValue = function(data, key, input = '') {
+window.matchColumnValue = function (data, key, input = '') {
   data[key]
     // normalize the rows into "name" and "value" pairs
     .map((n, i) => ({ name: n, value: data[key][i] }))
@@ -151,7 +151,7 @@ window.matchColumnValue = function(data, key, input = '') {
 }
 
 // Filter columnar data by matching a search input against one or more keys (columns)
-window.matchColumn = function(data, keys, input = '') {
+window.matchColumn = function (data, keys, input = '') {
   if (!data || !keys) return data;
   // ensure valid array
   const keyArray = Array.isArray(keys) ? keys : [keys];
@@ -174,29 +174,36 @@ window.matchColumn = function(data, keys, input = '') {
   return result;
 };
 
+// filter the data by matching a search input against one or more keys (columns)
+window.matchValueLabel = function (data, input = '') {
+  data.filter(({ label, value }) => !input
+    || label.toLowerCase().includes(input.toLowerCase())
+    || String(value) === String(input));
+}
+
 // translation function
 // usage: __("nederlands | english", {{ current_user }})
-window.__ = function(str, { metadata: { language }}) {
+window.__ = function (str, { metadata: { language } }) {
   const regex = /\s\|\s/;
-  
+
   if (regex.test(str)) {
     var arr = str.split(' | ');
-    if(language == 'nl') {
+    if (language == 'nl') {
       return arr[0];
     } else {
       return arr[1];
     }
   } else {
-   return str; 
+    return str;
   }
 }
 
 // parse the JSON value to an object and get the specified key
-window.val = function(value = '', path = '', fallback = null) {
+window.val = function (value = '', path = '', fallback = null) {
   // in case an object is provided, get the inner value
   const val = _.get(value, 'value', value);
   // check if the value is a JSON string
-  if(window.isJson(val)) {
+  if (window.isJson(val)) {
     // convert the string to an object
     const obj = JSON.parse(val);
     // search the object by provided path
@@ -212,76 +219,77 @@ window.val = function(value = '', path = '', fallback = null) {
 // are only capable of providing the column names
 // example: { "unt_adres" : true|false } or [ "unt_adres" ]
 // another valid value is a comma-separated string ("unt_adres, unt_plaats")
-window.use = function(needle = '', haystack = {}, fallback = false) {
-  if(_.isBoolean(haystack)) return haystack;
-  if(_.isEmpty(haystack)) return false;
-  const fields = 
-    window.isJson(haystack) 
-    ? JSON.parse(haystack) 
-    : _.isString(haystack)
-      ? haystack.split(', ')
-      : haystack;
+window.use = function (needle = '', haystack = {}, fallback = false) {
+  if (_.isBoolean(haystack)) return haystack;
+  if (_.isEmpty(haystack)) return false;
+  const fields =
+    window.isJson(haystack)
+      ? JSON.parse(haystack)
+      : _.isString(haystack)
+        ? haystack.split(', ')
+        : haystack;
   return window.isObject(fields)
-      ? _.has(fields, needle, fallback)
-      : _.isArrayLike(fields)
-        ? fields.includes(needle)
-        : fallback;
+    ? _.has(fields, needle, fallback)
+    : _.isArrayLike(fields)
+      ? fields.includes(needle)
+      : fallback;
 }
 
 window.useButton = window.use; // alias
 window.useFilter = window.use; // alias
 
 // determine if any filters should be used
-window.hasFilters = function(filters = {}) {
+window.hasFilters = function (filters = {}) {
   const fields = _.get(filters, 'value', filters);
-  if(_.isArrayLike(fields)) {
+  if (_.isArrayLike(fields)) {
     return _.size(fields) > 0;
-  } else if(_.isObject(fields)) {dashboard
+  } else if (_.isObject(fields)) {
+    dashboard
     return _.some(fields, (v) => v);
-  } else if(_.isEmpty(fields)) {
+  } else if (_.isEmpty(fields)) {
     return false;
   }
 }
 
 // check if the provided string is JSON
-window.isJson = function(str) {
+window.isJson = function (str) {
   try {
-      JSON.parse(str);
+    JSON.parse(str);
   } catch (e) {
-      return false;
+    return false;
   }
   return true;
 }
 
 // check if provided value is an object
-window.isObject = function(obj) {
+window.isObject = function (obj) {
   return _.isObject(obj) && !_.isArrayLikeObject(obj);
 }
 
 // get the value from JSON or any other datatype
-window.get = function(haystack, needle, fallback = null) {
-  if(window.isJson(haystack)) {
+window.get = function (haystack, needle, fallback = null) {
+  if (window.isJson(haystack)) {
     const obj = JSON.parse(haystack);
     return _.get(obj, needle, fallback);
   }
 }
 
 // get a global label from a defined list of key-value sets
-window.getLabel = function(key = '', fallback = null) {
+window.getLabel = function (key = '', fallback = null) {
   const label = _.get({
     create: 'toevoegen | add',
     edit: 'bewerken | edit',
     delete: 'verwijderen | delete'
   }, key, fallback);
-  
+
   return window.__(label);
 }
 
 // generate an Excel sheet based on provides table data
-window.getExcel = function(dfd, data, file = 'excel.xlsx', include_hidden = false) {
+window.getExcel = function (dfd, data, file = 'excel.xlsx', include_hidden = false) {
   const result = data.reduce((acc, row) => {
     Object.keys(row).forEach((key) => {
-      if(!include_hidden && key.indexOf('_') == 0) {
+      if (!include_hidden && key.indexOf('_') == 0) {
         return;
       }
       acc[key] = acc[key] || [];
@@ -289,78 +297,78 @@ window.getExcel = function(dfd, data, file = 'excel.xlsx', include_hidden = fals
     });
     return acc;
   }, {});
-  
+
   let df = new dfd.DataFrame(result);
-  
+
   dfd.toExcel(df, { filePath: file });
 }
 
 // convert the provided ID to a "sys short" equivalen
-window.sysShort = function(key, value = null) {
+window.sysShort = function (key, value = null) {
   return key + '-' + (value || 0).toString().padStart(6, '0');
 }
 
 // map the data dictionary structure
-window.dd = function(data) {
+window.dd = function (data) {
   var output = {};
 
   _.forEach(data.column_name, (column_name, key) => {
-      var type = data.data_type[key]; 
-      var max = data.maximum_length[key];
-      var required = data.is_nullable[key] === 'NO';
-      var default_value = data.column_default[key];
-      if(default_value) {
-        if(type === 'integer') {
-          default_value = _.toNumber(default_value);
-        } else if(type === 'boolean') {
-          default_value = default_value === 'true' ? true : false;
-        } else if(type === 'text') {
-          default_value = _.toString(default_value);
-        } else if(type.indexOf('timestamp') !== -1) {
-          default_value = new Date();
-        }
-      } else {
-        default_value = null;
+    var type = data.data_type[key];
+    var max = data.maximum_length[key];
+    var required = data.is_nullable[key] === 'NO';
+    var default_value = data.column_default[key];
+    if (default_value) {
+      if (type === 'integer') {
+        default_value = _.toNumber(default_value);
+      } else if (type === 'boolean') {
+        default_value = default_value === 'true' ? true : false;
+      } else if (type === 'text') {
+        default_value = _.toString(default_value);
+      } else if (type.indexOf('timestamp') !== -1) {
+        default_value = new Date();
       }
-      output[column_name] = { type, required, max, default: default_value };
+    } else {
+      default_value = null;
+    }
+    output[column_name] = { type, required, max, default: default_value };
   });
-  
+
   return output;
 }
 
 // determine if both a user and dossier can perform a certain action
 window.can = function (action, dossier, user) {
-    dossier = _.get(dossier, 'value', dossier);
-    return (
-        window.authorize(action, dossier?.allowed_actions) && 
-        window.authorize(action, user.metadata?.allowed_actions)
-    );
+  dossier = _.get(dossier, 'value', dossier);
+  return (
+    window.authorize(action, dossier?.allowed_actions) &&
+    window.authorize(action, user.metadata?.allowed_actions)
+  );
 };
 
 // determine if certain content can be accessed by the current user
 // in practice though, this is usually the sys-short, e.g. "obj" (lowercase)
-window.see = function (dossier, { metadata: { allowed_content }}) {
+window.see = function (dossier, { metadata: { allowed_content } }) {
   return window.authorize(dossier, allowed_content);
 }
 
 // determine if a certain value is allowed according to the whitelist
 // this could be an action or the name of a dossier
-window.authorize = function(value, whitelist = []) {
-    var haystack = whitelist;
+window.authorize = function (value, whitelist = []) {
+  var haystack = whitelist;
 
-    if(window.isJson(whitelist)) {
-      haystack = JSON.parse(whitelist);
-    } else if(_.isString(whitelist)) {
-      haystack = [whitelist];
-    }
+  if (window.isJson(whitelist)) {
+    haystack = JSON.parse(whitelist);
+  } else if (_.isString(whitelist)) {
+    haystack = [whitelist];
+  }
 
-    if (Array.isArray(haystack) && haystack.includes(value) || haystack[0] === '*') {
-        return true;
-    }
+  if (Array.isArray(haystack) && haystack.includes(value) || haystack[0] === '*') {
+    return true;
+  }
 
-    if (typeof haystack === 'object' && haystack[value] === true) {
-        return true;
-    }
+  if (typeof haystack === 'object' && haystack[value] === true) {
+    return true;
+  }
 
-    return false;
+  return false;
 };
