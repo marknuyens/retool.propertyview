@@ -176,7 +176,7 @@ window.matchColumn = function (data, keys, input = '') {
 
 // filter the data by matching a search input against one or more keys (columns)
 window.matchValueLabel = function (data, input = '') {
-  data.filter(({ label, value }) => !input
+  return data.filter(({ label, value }) => !input
     || label.toLowerCase().includes(input.toLowerCase())
     || String(value) === String(input));
 }
