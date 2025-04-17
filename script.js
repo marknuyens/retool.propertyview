@@ -80,7 +80,7 @@ window.transformData = function (data, ignore = []) {
       _.forEach(data[column], (value, index) => {
         if (column === 'Eigenaar') {
           val = data[col][index];
-          data[column][index] = `<a href="#details=${key}&action=update&id=${val}&title=${value}" target="_blank">${value}</a>`;
+          data[column][index] = `<a href="#details=${key}&primary=${key}&secondary=${key}&action=update&id=${val}&title=${value}" target="_blank">${value}</a>`;
         }
         // TODO: activate in order to update value into link
         //  data[column][key] = `<a href="#&key=${page}&id=${val}">${val}</a>`;
