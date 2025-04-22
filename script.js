@@ -141,10 +141,10 @@ window.toValueLabelSet = function (data, value = 'value', label = 'label', check
   return _.zipWith(data[value], data[label], data[check], (value, label, check) => ({ value, label, check }));
 }
 
-// get the ID from the "upsert" query data
+// normalize the ID from the "upsert" query data
 window.getUpsertId = function (data) {
   const id = Object.values(data)[0][0];
-  return id.includes('.') ? String(id) : Number(id);
+  return String(id).includes('.') ? String(id) : Number(id);
 }
 
 // filter "columnar" data list by input value
