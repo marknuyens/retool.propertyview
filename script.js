@@ -142,8 +142,9 @@ window.toValueLabelSet = function (data, value = 'value', label = 'label', check
 }
 
 // get the ID from the "upsert" query data
-window.getUpsertId = function(data) {
-  return Object.values(data)[0][0];
+window.getUpsertId = function (data) {
+  const id = Object.values(data)[0][0];
+  return id.includes('.') ? String(id) : Number(id);
 }
 
 // filter "columnar" data list by input value
