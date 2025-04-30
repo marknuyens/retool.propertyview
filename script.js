@@ -141,6 +141,11 @@ window.toValueLabelSet = function (data, value = 'value', label = 'label', check
   return _.zipWith(data[value], data[label], data[check], (value, label, check) => ({ value, label, check }));
 }
 
+// normalize the ID from the "insert" query data
+window.getInsertId = function (data, primary_key) {
+  return _.get(data.result[0], primary_key);
+}
+
 // normalize the ID from the "upsert" query data
 window.getUpsertId = function (data) {
   const id = Object.values(data)[0][0];
